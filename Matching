@@ -1,0 +1,46 @@
+
+package matching;
+
+
+
+import java.util.Scanner;
+
+public class Matching {
+private static Scanner s = new Scanner(System.in);
+private static int firstPick, secondPick;
+private static int[] baseData =  {8,5,1,6,7,2,9,5,6,3,9,4,2,8,1,7,3,4};
+
+    public static void main(String[] args) {
+    
+  System.out.println("the playing field is an array of 18 integers 0 to 17: \n");
+        indexPicker(baseData);
+    }
+    
+   private static void indexPicker (int[] array) {
+   System.out.println("Make first selection");
+   firstPick = s.nextInt();
+   System.out.print("you picked " + array[firstPick]+ "\n");
+   System.out.println("Make second selection");
+   secondPick = s.nextInt();
+   System.out.print("you picked " + array[secondPick] + "\n");
+   Listner(firstPick, secondPick, array);
+   
+   }
+    
+    private static void Listner(int firstPick, int secondPick, int[] array){
+    if(array[firstPick] == array[secondPick]){
+        isMatch();
+        System.out.println("You made a correct guess " + array [firstPick] + " is a winner");
+    }
+    else{
+        System.out.println("Sorry, try again");
+        indexPicker(baseData);
+    
+    }
+}
+
+    private static boolean isMatch(){ 
+        return true;
+    }
+
+}
