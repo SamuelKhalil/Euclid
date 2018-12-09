@@ -1,0 +1,534 @@
+package memorygame;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class MemoryGame extends JFrame {
+
+    private static final int WINDOW_WIDTH = 900;
+    private static final int WINDOW_HEIGHT = 900;
+
+    private MainPanel mainPanel;
+
+    public MemoryGame() {
+MG();
+
+    }
+    
+public void MG(){
+
+        setSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setResizable(true);
+        setTitle("Memory Game");
+
+         mainPanel = new MainPanel();
+
+        add(mainPanel);
+
+        setVisible(true);
+}    
+    
+}
+
+
+
+package memorygame;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+
+
+    
+
+public class Levels implements ActionListener {
+    
+       private MemoryGame memoryGame;
+        ButtonsPanel buttonsPanel = new ButtonsPanel();
+        BottomPanel bottompanel = new BottomPanel();
+	JFrame frame = new JFrame("Euclid's Game");
+    
+	JPanel secondMenu = new JPanel();
+        JPanel menu=new JPanel();
+        
+	JPanel mini = new JPanel();
+
+	JPanel start_screen = new JPanel();
+	
+	JButton btn[] = new JButton[20];
+    JButton easy = new JButton("Easy");
+     JButton medium = new JButton("Medium");
+    JButton hard = new JButton("Hard");
+    JButton inst = new JButton("Instructions");
+    
+	public Levels(){
+            
+		frame.setSize(400,250);
+		frame.setLocation(800,300);
+		frame.setLayout(new BorderLayout());
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		start_screen.setLayout(new BorderLayout());
+		secondMenu.setLayout(new FlowLayout(FlowLayout.CENTER));
+		mini.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+		start_screen.add(secondMenu, BorderLayout.CENTER);
+		secondMenu.add(mini, BorderLayout.CENTER);
+
+		mini.add(easy, BorderLayout.NORTH);
+                mini.add(medium, BorderLayout.NORTH);
+		mini.add(hard, BorderLayout.NORTH);
+                mini.add(inst, BorderLayout.SOUTH);
+                
+		easy.addActionListener(this);
+		easy.setEnabled(true);
+                medium.addActionListener(this);
+		medium.setEnabled(true);
+		hard.addActionListener(this);
+		hard.setEnabled(true);
+                inst.addActionListener(this);
+		inst.setEnabled(true);
+		frame.add(start_screen, BorderLayout.CENTER);
+		frame.setVisible(true);
+	}
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == easy){
+            buttonsPanel.setNumberOfColumns(3);
+            buttonsPanel.setNumberOfRows(2);
+            buttonsPanel.setColors(6);
+            new MemoryGame();
+                    
+        }else if(e.getSource() == medium){
+            buttonsPanel.setNumberOfColumns(4);
+            buttonsPanel.setNumberOfRows(2);
+            buttonsPanel.setColors(8);
+            new MemoryGame();
+            
+        }else if(e.getSource() == hard){
+            buttonsPanel.setNumberOfColumns(4);
+            buttonsPanel.setNumberOfRows(4);
+                        buttonsPanel.setColors(16);
+            new MemoryGame();
+            
+        }
+        else if(e.getSource() == inst){       
+            JOptionPane.showMessageDialog(null, "Welcome to Euclid's game! \nFirst, enter a goal. This will be your goal for the number of mouse clicks it takes to beat the game.\n"
+                     + "After you enter goal, choose a difficulty and the game will start.\nYour objective is to click on the cards and try to match all of the colors.\n"
+                     + "Once all of the colors are matched, click on the gameboard once more,\nand the results will be shown.\n"
+                    +  "To win you need to beat the difficulty levels with a score less than 30!\n"
+                    + "Thank you for playong Euclid's game!");
+        }        
+           
+    }
+}
+
+
+
+
+package memorygame;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class MainPanel extends JPanel{
+
+private BorderLayout borderLayout;
+private BottomPanel bottomPanel;
+private ButtonsPanel buttonsPanel;
+
+public MainPanel(){
+mainPanel();
+}
+public  void mainPanel(){
+    borderLayout = new BorderLayout(1,1);
+
+    setLayout(borderLayout);
+
+    buttonsPanel = new ButtonsPanel();
+    bottomPanel = new BottomPanel();
+
+    add(buttonsPanel);
+    add(bottomPanel);
+    borderLayout.addLayoutComponent(buttonsPanel, BorderLayout.CENTER);
+    borderLayout.addLayoutComponent(bottomPanel, BorderLayout.SOUTH);
+
+}
+
+
+}
+
+
+package memorygame;
+
+import javax.swing.*;
+
+public class Card extends JButton {
+
+private boolean cardMatched;
+private boolean cardSelected;
+
+private String back;
+
+
+public Card(String back)
+{
+    this.back = back;
+    cardSelected = false;
+    cardMatched = false;
+}
+
+public String getBack() {
+    return back;
+}
+
+public void setMatched(boolean matched) {
+    cardMatched = matched;
+}
+
+public void setSelected(boolean selected) {
+    cardSelected = selected;
+}
+public boolean isCMatched() {
+    if (cardMatched == true) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+public boolean isCSelected() {
+    if (cardSelected == true) {
+        return true;
+    } else {
+        return false;
+    }
+}
+}
+
+
+package memorygame;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.lang.reflect.Field;
+import java.util.Random;
+import static java.lang.String.valueOf;
+
+public class ButtonsPanel extends JPanel implements ActionListener{
+
+public static  int NUMBER_OF_ROWS = 4;
+public static  int NUMBER_OF_COLUMNS = 4;
+private static final int HORIZONTAL_GAP = 5;
+private static final int VERTICAL_GAP = 5;
+private static final int PANEL_BORDER = 20;
+
+private Card[][] cards = null;
+
+
+//public int index = 20;
+//public String[] colors = new String[index];
+public static int colorLength;
+public String[] colors = {"Blue", "Blue", "Red", "Red", "Green", "Green", "Magenta", "Magenta", "Orange", "Orange", "Cyan", "Cyan", "Black", "Black", "Pink", "Pink"};
+
+
+
+private Random random;
+private Field field;
+private Color color;
+private int score = 0;
+private Card selectedCard;
+private Card c1;
+private Card c2;
+private Card c3;
+
+
+  
+  
+public ButtonsPanel(){
+    setBackground(Color.BLACK);
+
+    GridLayout layout = new GridLayout(NUMBER_OF_ROWS, NUMBER_OF_COLUMNS, HORIZONTAL_GAP, VERTICAL_GAP);
+    setLayout(layout);
+
+    setBorder(BorderFactory.createEmptyBorder(PANEL_BORDER,PANEL_BORDER,PANEL_BORDER,PANEL_BORDER));
+
+    cards = new Card[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
+    shuffle();
+    setCards();
+    
+ 
+
+}
+public void setCards() {
+    int a = 0;
+    for (int row = 0; row < cards.length; row++) {
+        for (int column = 0; column < cards[0].length; column++) {
+            cards[row][column] = new Card(colors[a]);
+            add(cards[row][column]);
+            cards[row][column].addActionListener(this);
+            a++;
+        }
+    }
+}
+
+public void shuffle() {
+    random = new Random();
+    for (int i = 0; i < colorLength; i++) {
+        int pos = random.nextInt(colorLength);
+        String temp = colors[i];
+        colors[i] = colors[pos];
+        colors[pos] = temp;
+    }
+}
+
+public void setColors(Card card) {
+    try {
+        field = Class.forName("java.awt.Color").getField(card.getBack().toUpperCase());
+        color = (Color) field.get(null);
+        card.setBackground(color);
+    } catch (Exception ex) {
+        color = null;
+    }
+}
+
+public void showCardColor() {
+    for (int row = 0; row < cards.length; row++) {
+        for (int column = 0; column < cards[0].length; column++) {
+            if (selectedCard == cards[row][column]) {
+                if (!cards[row][column].isCMatched()) {
+                    if (!cards[row][column].isCSelected()) {
+                        setColors(cards[row][column]);
+                        cards[row][column].setSelected(true);
+                        mouseClick++;
+                        System.out.println(mouseClick);
+                    } else {
+                        System.out.println("This field is already selected");
+                    }
+                } else {
+                    System.out.println("This file is already matched.");
+                }
+            }
+        }
+    }
+}
+
+int mouseClick = 0;
+
+public void hideColor() {
+    if (mouseClick > 1 && mouseClick % 2 != 0) {
+        c1.setBackground(new JButton().getBackground());
+        c2.setBackground(new JButton().getBackground());
+        c1 = null;
+        c2 = null;
+    }
+}
+
+public void check() {
+    if (c1.getBack().equals(c2.getBack())) {
+        c1.setMatched(true);
+        c2.setMatched(true);
+        if (isEndOfGame() == true) {
+            if (score < 30){
+                JOptionPane.showMessageDialog(this, "You won in " + score + " moves!\n"
+                    + "");
+            }
+            else if (score > 30){
+            JOptionPane.showMessageDialog(this, "You lose with " + score + " moves!\n"
+                    + "");
+        }
+        }
+        c1 = null;
+        c2 = null;
+        c3 = null;
+
+        c1 = selectedCard;
+        showCardColor();
+        
+} else {
+        showCardColor();
+        c1.setSelected(false);
+        c2.setSelected(false);
+        hideColor();
+        c1 = c3;
+        c3 = null;
+    }
+    
+}
+
+public boolean isEndOfGame() {
+
+    for (Card[] cards2d : cards) {
+        for (Card cards1d : cards2d) {
+            if (cards1d.isCMatched() == false) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+public void doTurn() {
+    if (c1 == null && c2 == null) {
+        if (!selectedCard.isCMatched()) {
+            c1 = selectedCard;
+            showCardColor();
+        }
+    }
+    if (c1 != null && c1 != selectedCard && c2 == null) {
+        if (!selectedCard.isCMatched()) {
+            c2 = selectedCard;
+            showCardColor();
+
+        }
+    }
+    if (c1 != null && c2 != null && c2 != selectedCard && c3 == null) {
+        c3 = selectedCard;
+        check();
+    }
+
+}
+
+Object source;
+
+@Override
+public void actionPerformed(ActionEvent e) {
+    source = e.getSource();                 
+    selectedCard = (Card) source;
+
+    doTurn();
+    score++;
+
+}
+public int getNumberOfRows(){
+
+return NUMBER_OF_ROWS;
+}
+public int getNumberOfColumns(){
+
+return NUMBER_OF_COLUMNS;
+}
+public void setNumberOfRows(int N){
+    NUMBER_OF_ROWS = N;
+}
+public void setNumberOfColumns(int N){
+    NUMBER_OF_COLUMNS = N;
+}
+public void setColors(String[] a){
+colors = a;
+
+}
+//public void setIndex(int N){
+//index = N;
+//}
+public int getColors(){
+    return colorLength;
+}
+public void setColors(int N){
+    colorLength = N;
+}
+}
+
+
+package memorygame;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class BottomPanel extends JPanel implements  ActionListener {
+
+public String p;
+public static int goalscore;
+private JButton buttonRestart;
+private JLabel labelScore;
+private JLabel labelMesseges;
+private BorderLayout borderLayout;
+int score = 0;
+private  MainPanel mainPanel;
+public BottomPanel(){
+
+    borderLayout = new BorderLayout();
+    setLayout(borderLayout);
+    buttonRestart = new JButton("Restart");
+    buttonRestart.setPreferredSize(new Dimension(150,50));
+    labelMesseges = new JLabel();
+    labelScore = new JLabel("" + labelScore, SwingConstants.CENTER);
+    labelScore.setPreferredSize(new Dimension(300,50));
+
+    labelMesseges.setText(" ");
+    labelMesseges.setBorder(BorderFactory.createMatteBorder(0,2,0,2,Color.black));
+    labelScore.setFont(new Font("Courier", Font.BOLD, 16));
+    labelScore.setText("Match the colors!");
+
+    add(buttonRestart);
+    buttonRestart.addActionListener(this);
+    
+    add(labelMesseges);
+    add(labelScore);
+    borderLayout.addLayoutComponent(buttonRestart, BorderLayout.WEST);
+    borderLayout.addLayoutComponent(labelMesseges,BorderLayout.CENTER);
+    borderLayout.addLayoutComponent(labelScore,BorderLayout.EAST);
+ 
+    
+}
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+    buttonRestart.addActionListener(this);
+    if (e.getSource() == buttonRestart){
+    restart();
+    
+}
+   }
+
+
+ public void restart() {
+
+//MainPanel
+new Levels();
+
+}
+}
+
+
+
+package memorygame;
+
+import javax.swing.UIManager;
+
+public class Test{
+
+    public static void main(String[] args) throws Exception {
+  
+        try{
+   UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+ }catch(Exception e){
+  e.printStackTrace(); 
+ }
+        
+        new Levels();
+
+    }
+}
